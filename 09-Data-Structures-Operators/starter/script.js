@@ -665,7 +665,7 @@ const planesInLine = function (n) {
 planesInLine(5);
 planesInLine(3);
 planesInLine(12);
-*/
+
 
 // document.body.append(document.createElement('textarea'));
 // document.body.append(document.createElement('button'));
@@ -705,3 +705,29 @@ no.push(firstname + n[0].toUpperCase() + n.slice(1));
 console.log(no);
 console.log(no.toString());
 
+const runOnce = function(){
+  console.log('This will never run again');
+};
+runOnce();
+
+//LIFE
+(function(){
+  console.log('This will never run again');
+})();
+
+(()=> console.log('This will also never run again'))();
+*/
+//CLOSURES
+const secureBooking = function(){
+  let passengerCount = 0;
+
+  return function(){
+    passengerCount++;
+    console.log(`${passengerCount} passengers`);
+  };
+};
+
+const booker = secureBooking();
+booker();
+booker();
+booker();
