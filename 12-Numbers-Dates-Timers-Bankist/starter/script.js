@@ -184,6 +184,7 @@ const updateUI = function (acc) {
   calcDisplayBalance(acc);
 
   // Display summary
+  //More commits
   calcDisplaySummary(acc);
 };
 
