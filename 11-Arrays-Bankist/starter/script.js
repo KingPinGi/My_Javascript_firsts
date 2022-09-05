@@ -63,11 +63,13 @@ const inputClosePin = document.querySelector('.form__input--pin');
 
 
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
-const displayMovements = function(movements){
+const displayMovements = function(movements, sort = false  ){
   containerMovements.innerHTML = '';
 
 
-   movements.forEach(function(mov, i){
+  const movs = sort ? movements.slice().sort((a, b) => a - b): movements;
+  
+   movs.forEach(function(mov, i){
     const type = mov > 0 ? 'deposit' : 'withdrawal';
     const sign = '$';
 
@@ -83,9 +85,10 @@ const displayMovements = function(movements){
 };
 displayMovements(account1.movements);
 
+
 const createUsername = function(acc){
 
-  accounts.forEach(function(acc){
+accounts.forEach(function(acc){
     acc.username = acc.owner
     .toLowerCase()
     .split(' ')
@@ -94,28 +97,141 @@ const createUsername = function(acc){
   })
 };
 createUsername(accounts);
-console.log(accounts);
+
+const updateUI = function(acc){
+  //Display movements
+  displayMovements(acc.movements);
+
+  //Display blance
+  calcDisplayBlance(acc);
+
+  //display summary
+  calcDisplaySummary(acc);
+};
+let currentAccount ;
+
+
+
+// console.log(accounts);
 
 const deposits = movements.filter(function(mov){
   return mov > 0;
 })
-console.log(movements);
-console.log(deposits)
+// console.log(movements);
+// console.log(deposits)
 
 const withdrawal = movements.filter(function(mov){
   return mov < 0;
 });
 const withdrawals = movements.filter(mov => mov < 0);
-console.log(withdrawal);
-console.log(withdrawals);
+// console.log(withdrawal);
+// console.log(withdrawals);
 
 
 
 const user = 'Steven Thomas Williams';
  
-const calcDisplayBlance = function(movements){
-  const max = movements.reduce(acc, nov);
+const calcDisplayBlance = function(acc){
+  acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
+
+  labelBalance.textContent = `${acc.balance} EUR`;
+};
+
+
+const calcDisplaySummary = function(acc){
+  const incomes = acc.movements.filter(mov => mov > 0).reduce((acc, mov) => acc + mov, 0);
+  labelSumIn.textContent = `${incomes}$`;
+
+  const out = acc.movements.filter(mov => mov < 0).reduce((acc, mov) => Math.trunc(acc + mov), 0);
+  labelSumOut.textContent = `${Math.abs(out)}$`;
+
+  const interest = acc.movements.filter(mov => mov > 0).map(deposit => deposit * acc.interestRate/100).filter((int, i, arr) =>{ return int >= 1;}).reduce((acc, int) => acc + int, 0);
+  labelSumInterest.textContent = `${interest}$`;
+
 }
+
+
+//EVENT LISTENER
+btnLogin.addEventListener('click', function(e){
+  //Prevent form from submitting
+  e.preventDefault();
+
+  currentAccount = accounts.find(acc => acc.username === inputLoginUsername.value);
+  console.log(currentAccount);
+
+  if(currentAccount?.pin === Number(inputLoginPin.value)){
+    //Display UI and message
+    labelWelcome.textContent = `Welcome back, ${currentAccount.owner.split(' ')[0]}`;
+    containerApp.style.opacity = 100;
+    //Clear input fiels
+    inputLoginUsername.value = inputLoginPin.value = '';
+    inputLoginPin.blur(); 
+
+    updateUI(currentAccount)
+
+    
+    
+  }
+});
+
+btnTransfer.addEventListener('click', function(e){
+  e.preventDefault();
+  const amount = Number(inputTransferAmount.value);
+  const receiverAcc = accounts.find(acc => acc.username === inputTransferTo.value);
+  inputTransferAmount.value = inputTransferTo.value = '';
+
+  if (amount > 0 && receiverAcc && currentAccount.balance >= amount && receiverAcc?.username !== currentAccount.username){
+    currentAccount.movements.push(-amount);
+    receiverAcc.movements.push(amount);
+    updateUI(currentAccount);
+  }
+
+});
+
+btnLoan.addEventListener('click', function(e){
+  e.preventDefault();
+
+  const amount = Number(inputLoanAmount.value);
+
+  if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)){
+    //add movement
+    currentAccount.movements.push(amount);
+
+    //update ui
+    updateUI(currentAccount);
+  };
+  inputLoanAmount = '';
+
+})
+
+btnClose.addEventListener('click', function(e){
+  e.preventDefault();
+  
+  
+  if (inputCloseUsername.value === currentAccount.username && Number(inputClosePin.value) === currentAccount.pin){
+    const index = accounts.findIndex(
+      acc => acc.username === currentAccount.username
+    );
+
+    //Delete account
+    accounts.splice(index, 1);
+
+    //Hide ui
+    containerApp.style.opacity = 0;
+    
+  }
+  inputCloseUsername.value = inputClosePin.value = '';
+});
+
+let sorted = false;
+btnSort.addEventListener('click', function (e) {
+  e.preventDefault();
+  displayMovements(currentAccount.movements, !sorted);
+  sorted = !sorted;
+});
+
+
+ 
  
 
 
@@ -281,29 +397,179 @@ TEST DATA 1: [5, 2, 4, 1, 15, 8, 3]
 TEST DATA 2: [16, 6, 10, 5, 6, 1, 4]
 
 GOOD LUCK 😀
-*/
 
-const calcAverageHumanAge = function (ages) {
-  const humanAges = ages.map(age => (age <= 2 ? 2 * age : 16 + age * 4));
-  const adults = humanAges.filter(age => age >= 18);
-  console.log(humanAges);
-  console.log(adults);
 
-  // const average = adults.reduce((acc, age) => acc + age, 0) / adults.length;
+// const calcAverageHumanAge = function (ages) {
+//   const humanAges = ages.map(age => (age <= 2 ? 2 * age : 16 + age * 4));
+//   const adults = humanAges.filter(age => age >= 18);
+//   console.log(humanAges);
+//   console.log(adults);
 
-  const average = adults.reduce(
-    (acc, age, i, arr) => acc + age / arr.length,
-    0
-  );
+//   // const average = adults.reduce((acc, age) => acc + age, 0) / adults.length;
 
-  // 2 3. (2+3)/2 = 2.5 === 2/2+3/2 = 2.5
+//   const average = adults.reduce(
+//     (acc, age, i, arr) => acc + age / arr.length,
+//     0
+//   );
 
-  return average;
-};
-const avg1 = calcAverageHumanAge([5, 2, 4, 1, 15, 8, 3]);
-const avg2 = calcAverageHumanAge([16, 6, 10, 5, 6, 1, 4]);
+//   // 2 3. (2+3)/2 = 2.5 === 2/2+3/2 = 2.5
+
+//   return average;
+// };
+const calcAverageHumanAge2 = ages => 
+   ages
+   .map(age => (age <= 2 ? 2 * age : 16 + age * 4))
+   .filter(age => age >= 18)
+   .reduce((acc, age,i, arr) => acc + age / arr.length, 0);
+
+const avg1 = calcAverageHumanAge2([5, 2, 4, 1, 15, 8, 3]);
+const avg2 = calcAverageHumanAge2([16, 6, 10, 5, 6, 1, 4]);
 console.log(avg1, avg2); 
 
 const eurToUsd = 1.1;
+
+//PIPELINE
 const totalDepositUSD = movements.filter(mov => mov > 0).map(mov => mov * eurToUsd).reduce((acc, mov) => acc + mov, 0) 
 console.log(totalDepositUSD);
+
+
+
+const firstWithdrawal = movements.find(mov => mov < 0);
+console.log(movements);
+console.log(firstWithdrawal);
+
+console.log(accounts);
+
+const account = accounts.find(acc => acc.owner === 'Jessica Davis');
+console.log(account);
+ 
+
+
+console.log(movements);
+
+//EQUALITY
+console.log(movements.includes(-130));
+
+//CONDITION
+const anyDeposits = movements.some(mov => mov > 1500);
+console.log(anyDeposits);
+
+//every:condition
+console.log(movements.every(mov => mov > 0));
+console.log(account4.movements.every(mov => mov > 0));
+
+
+//Strings 
+const owners = ['Jonas', 'Zach', 'Adam', 'Martha'];
+console.log(owners.sort());
+console.log(owners);
+
+//Numbers
+//sort works like arranging with strinmgs
+console.log(movements);
+
+//return < 0, A, B(keep order)
+//return > 0, b, a(switch order)
+//Ascending
+// movements.sort((a, b) => {
+//   if (a > b)
+//   return 1;
+//   if(b > a)
+//   return -1;
+// }
+// ); 
+movements.sort((a,b) => a - b);
+console.log(movements);
+//descending
+// movements.sort((a, b) => {
+//   if (a < b)
+//   return 1;
+//   if(b < a)
+//   return -1;
+// }
+// );
+movements.sort((a,b) => b - a);
+console.log(movements);
+*/
+
+//creating array
+// const arr = ([1,2,3,4,5,6,7]);
+// console.log(new Array(1,2,3,4,5,6,7)); 
+
+// //Empty arrays with fill method
+// const x = new Array(7);
+// console.log(x);
+// // console.log(x.fill(1));
+// // console.log(x.fill(3, 5));
+// console.log(x.fill(1, 3, 5));
+
+// arr.fill(23, 2, 6);
+// console.log(arr);
+
+// //Array.from
+// const y = Array.from({ length: 7 }, () => 1);
+// console.log(y);
+
+// const z = Array.from({length: 7}, (cur, i) => i + 1);
+// console.log(z); 
+
+// labelBalance.addEventListener('click', function(){
+//   const movementsUI = Array.from(document.querySelectorAll('.movements-value')).el => Number(el.textContent.replace('$', '');
+
+//   console.log(movementsUI);
+// })
+
+
+/*
+Julia and Kate are still studying dogs, and this time they are studying if dogs are eating too much or too little.
+Eating too much means the dog's current food portion is larger than the recommended portion, and eating too little is the opposite.
+Eating an okay amount means the dog's current food portion is within a range 10% above and 10% below the recommended portion (see hint).
+
+1. Loop over the array containing dog objects, and for each dog, calculate the recommended food portion and add it to the object as a new property. Do NOT create a new array, simply loop over the array. Forumla: recommendedFood = weight ** 0.75 * 28. (The result is in grams of food, and the weight needs to be in kg)
+2. Find Sarah's dog and log to the console whether it's eating too much or too little. HINT: Some dogs have multiple owners, so you first need to find Sarah in the owners array, and so this one is a bit tricky (on purpose) 🤓
+3. Create an array containing all owners of dogs who eat too much ('ownersEatTooMuch') and an array with all owners of dogs who eat too little ('ownersEatTooLittle').
+4. Log a string to the console for each array created in 3., like this: "Matilda and Alice and Bob's dogs eat too much!" and "Sarah and John and Michael's dogs eat too little!"
+5. Log to the console whether there is any dog eating EXACTLY the amount of food that is recommended (just true or false)
+6. Log to the console whether there is any dog eating an OKAY amount of food (just true or false)
+7. Create an array containing the dogs that are eating an OKAY amount of food (try to reuse the condition used in 6.)
+8. Create a shallow copy of the dogs array and sort it by recommended food portion in an ascending order (keep in mind that the portions are inside the array's objects)
+
+HINT 1: Use many different tools to solve these challenges, you can use the summary lecture to choose between them 😉
+HINT 2: Being within a range 10% above and below the recommended portion means: current > (recommended * 0.90) && current < (recommended * 1.10). Basically, the current portion should be between 90% and 110% of the recommended portion.
+*/
+const dogs = [
+  { weight: 22, curFood: 250, owners: ['Alice', 'Bob'] },
+  { weight: 8, curFood: 200, owners: ['Matilda'] },
+  { weight: 13, curFood: 275, owners: ['Sarah', 'John'] },
+  { weight: 32, curFood: 340, owners: ['Michael'] }
+];
+
+// let i = 0;
+// dogs.forEach(function(weight){
+//   let recommendedFood = 0;
+//   recommendedFood = weight ** 0.75 * 28;
+//   dogs.indexOf()
+//   dogs.splice( {i}, 0,`recommendedFood : ${recommendedFood}`);
+//   i++;
+// });
+// console.log(dogs);
+
+dogs.forEach((dog) => {
+  let recommendedFood = 0;
+  recommendedFood = dog.weight ** 0.75 * 28;
+  dog.recommendedFood = Math.trunc(`${recommendedFood}`);
+});
+console.log(dogs);
+
+dogs.forEach((dog) => {
+  if (dog.curFood > (dog.recommendedFood * 0.90) && dog.curFood < (dog.recommendedFood * 1.10) ){
+    console.log('Your Dog is eating well');
+    console.log(`${dog.owners}`)
+  }else if (dog.curFood < (dog.recommendedFood * 0.90)){
+    console.log('Your dog isnt eating well');
+    console.log(`${dog.owners}`)
+  }else if (dog.curFood > (dog.recommendedFood * 1.10)){
+    console.log('Your dog is overeating');
+    console.log(`${dog.owners}`)
+  }
+});
