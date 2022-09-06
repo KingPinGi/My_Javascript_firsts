@@ -1,12 +1,14 @@
 'use strict';
 
-///////////////////////////////////////
-// Modal window
-
+const btnScrollTo = document.querySelector('.btn--scroll-to');
+const section1 = document.querySelector('#section--1');
 const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
 const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
+///////////////////////////////////////
+// Modal window
+
 
 const openModal = function (e) {
   e.preventDefault();
@@ -32,6 +34,63 @@ document.addEventListener('keydown', function (e) {
     closeModal();
   }
 });
+
+//Button ...
+btnScrollTo.addEventListener('click', function(e){
+  const s1coords = section1.getBoundingClientRect();
+  console.log(s1coords);
+
+  console.log(e.target.getBoundingClientRect());
+
+  console.log('Current scroll (X/Y)', window.pageXOffset, window.pageYOffset);
+
+  console.log(
+    'height/width viewport',
+    document.documentElement.clientHeight,
+    document.documentElement.clientWidth
+  );
+
+  //scrolling
+  // window.scrollTo(
+  //   s1coords.left + window.pageXOffset, 
+  //   s1coords.top + window.pageYOffset
+  // );
+
+  // window.scrollTo({
+  //   left: s1coords.left + window.pageXOffset,
+  //   top: s1coords.top + window.pageYOffset,
+  //   behavior: 'smooth',
+  // })
+
+  section1.scrollIntoView({behaviour : 'smooth'});
+});
+
+//Page navigation
+
+// document.querySelectorAll('.nav__link').forEach(function(el){
+//   el.addEventListener('click', function(e){
+//     e.preventDefault();
+    
+//     const id = this.getAttribute('href');
+//     console.log(id);
+//     document.querySelector(id).scrollIntoView({behaviour: 'smooth'});
+//   });
+// });
+
+//1.Add eventlistener to common parent elemnt
+//2. Determine what element orignated the wevnt
+
+document.querySelector('.nav__links').addEventListener('click', function(e){
+  e.preventDefault();
+
+  //Mathching staradegy
+  if (e.target.classList.contains('nav__link')){
+    const id = e.target.getAttribute('href');
+    console.log(id);
+    document.querySelector(id).scrollIntoView({behaviour: 'smooth'});
+  }
+});
+
 ////////////////////////////////////////
 ////////////////////////
 /////////////////////////////////////\
@@ -119,39 +178,6 @@ logo.classList.contains('c');
 //dont use
 logo.className = 'Jonas';
 */
-
-const btnScrollTo = document.querySelector('.btn--scroll-to');
-const section1 = document.querySelector('#section--1');
-
-btnScrollTo.addEventListener('click', function(e){
-  const s1coords = section1.getBoundingClientRect();
-  console.log(s1coords);
-
-  console.log(e.target.getBoundingClientRect());
-
-  console.log('Current scroll (X/Y)', window.pageXOffset, window.pageYOffset);
-
-  console.log(
-    'height/width viewport',
-    document.documentElement.clientHeight,
-    document.documentElement.clientWidth
-  );
-
-  //scrolling
-  // window.scrollTo(
-  //   s1coords.left + window.pageXOffset, 
-  //   s1coords.top + window.pageYOffset
-  // );
-
-  // window.scrollTo({
-  //   left: s1coords.left + window.pageXOffset,
-  //   top: s1coords.top + window.pageYOffset,
-  //   behavior: 'smooth',
-  // })
-
-  section1.scrollIntoView({behaviour : 'smooth'});
-});
-
 // const h1 = document.querySelector('h1');
 
 // const alertH1 = function(e){
@@ -167,7 +193,7 @@ btnScrollTo.addEventListener('click', function(e){
 // };
 //we can remove eventHandler incase we dont need it anymore
 
-
+/*
 const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
 const randomColor = () => 
 `rgb(${randomInt(0, 255)}, ${randomInt(0, 255)}, ${randomInt(0, 255)})`;
@@ -187,4 +213,38 @@ document.querySelector('.nav__links').addEventListener('click', function(e){
 document.querySelector('.nav').addEventListener('click', function(e){
   this.style.backgroundColor = randomColor();
   console.log('NAV', e.target, e.currentTarget);
+}, true);
+
+*/
+const h1 = document.querySelector('h1');
+
+//Going downwards: child
+console.log(h1.querySelectorAll('.highlight'));
+console.log(h1.childNodes);
+console.log(h1.children);
+h1.firstElementChild.style.color = 'white';
+h1.lastElementChild.style.color = 'black';
+
+//Going Upwards: parents
+console.log(h1.parentNode);
+console.log(h1.parentElement);
+
+h1.closest('.header').style.background = 'var(--gardient-secondary)';
+
+h1.closest('h1').style.background = 'var(--gradient-primary)';
+
+//  Going sideways : Siblings
+//elements way
+console.log(h1.previousElementSibling);
+console.log(h1.nextElementSibling);
+
+//nodes
+console.log(h1.previousSibling);
+console.log(h1.nextSibling);
+
+console.log(h1.parentElement.children);
+
+console.log(h1.parentElement.children);
+[...h1.parentElement.children].forEach(function(el){
+  if(el != h1) el.style.transform = 'scale(0.5)';
 });
