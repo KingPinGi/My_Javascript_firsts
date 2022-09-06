@@ -36,6 +36,7 @@ document.addEventListener('keydown', function (e) {
 ////////////////////////
 /////////////////////////////////////\
 
+/*
 //Selecting Elements
 console.log(document.documentElement);
 console.log(document.head);
@@ -67,5 +68,123 @@ header.prepend(message);
 
 //Delete Elements
 document.querySelector('.btn--close-cookie').addEventListener('click', function(){
+  message.parentElement.removeChild(message);
   message.remove(); 
 })
+
+//Styles
+message.style.backgroundColor = '#37383d';
+message.style.width = '120%';
+
+console.log(message.style.color);
+console.log(message.style.backgroundColor);
+
+console.log(getComputedStyle(message));
+console.log(getComputedStyle(message).height);
+console.log(getComputedStyle(message).color);
+
+message.style.height = Number.parseFloat(getComputedStyle(message).height) + 40 + 'px';
+
+document.documentElement.style.setProperty('--color-primary', 'orangered')
+
+//Attributes
+const logo = document.querySelector('.nav__logo');
+console.log(logo.alt);
+console.log(logo.src);
+console.log(logo.className);
+
+logo.alt = 'Beautiful minimalist logo';
+
+//Non-standard
+console.log(logo.designer);
+console.log(logo.getAttribute('designer'));
+logo.setAttribute('company', 'Banklist');
+
+console.log(logo.src);
+console.log(logo.getAttribute('src'));
+
+const link = document.querySelector('.nav__link--btn');
+console.log(link.getAttribute('href'));
+console.log(link.href);
+
+//Data Attribute
+console.log(logo.dataset.versionNumber);
+
+//classes  
+logo.classList.add('c');
+logo.classList.remove('c');
+logo.classList.toggle('c');
+logo.classList.contains('c');
+
+//dont use
+logo.className = 'Jonas';
+*/
+
+const btnScrollTo = document.querySelector('.btn--scroll-to');
+const section1 = document.querySelector('#section--1');
+
+btnScrollTo.addEventListener('click', function(e){
+  const s1coords = section1.getBoundingClientRect();
+  console.log(s1coords);
+
+  console.log(e.target.getBoundingClientRect());
+
+  console.log('Current scroll (X/Y)', window.pageXOffset, window.pageYOffset);
+
+  console.log(
+    'height/width viewport',
+    document.documentElement.clientHeight,
+    document.documentElement.clientWidth
+  );
+
+  //scrolling
+  // window.scrollTo(
+  //   s1coords.left + window.pageXOffset, 
+  //   s1coords.top + window.pageYOffset
+  // );
+
+  // window.scrollTo({
+  //   left: s1coords.left + window.pageXOffset,
+  //   top: s1coords.top + window.pageYOffset,
+  //   behavior: 'smooth',
+  // })
+
+  section1.scrollIntoView({behaviour : 'smooth'});
+});
+
+// const h1 = document.querySelector('h1');
+
+// const alertH1 = function(e){
+//   alert('addEventhandler: Great! You are reading the heading :D');
+
+//   h1.removeEventListener('mouseenter', alertH1);
+// }
+// h1.addEventListener('mouseenter', alertH1);
+
+// setTimeout(() => h1.removeEventListener('mouseenter', alertH1), 3000);
+// h1.onmouseenter = function(e){
+//   alert("onmouseenter: addEventListener:Great! YOu are reading the header");
+// };
+//we can remove eventHandler incase we dont need it anymore
+
+
+const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
+const randomColor = () => 
+`rgb(${randomInt(0, 255)}, ${randomInt(0, 255)}, ${randomInt(0, 255)})`;
+console.log(randomColor(0, 255));
+
+document.querySelector('.nav__link').addEventListener('click', function(e){
+  this.style.backgroundColor = randomColor();
+  console.log('LINK', e.target, e.currentTarget);
+
+  //stop Progation
+  e.stopPropagation();
+});
+document.querySelector('.nav__links').addEventListener('click', function(e){
+  this.style.backgroundColor = randomColor();
+  console.log('CONTAINER', e.target, e.currentTarget);
+});
+document.querySelector('.nav').addEventListener('click', function(e){
+  this.style.backgroundColor = randomColor();
+  console.log('NAV', e.target, e.currentTarget);
+});
