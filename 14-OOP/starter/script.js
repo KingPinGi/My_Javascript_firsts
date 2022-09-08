@@ -1,6 +1,6 @@
 'use strict';
-
 /*
+
 const Person = function(firstName, birthYear) {
     this.firstName = firstName;
     this.birthYear = birthYear;
@@ -23,6 +23,9 @@ const jack = new Person('jack', 1967);
 console.log(matilda, jack);
 
 console.log(jack instanceof Person);
+
+
+
 
 //Prototype
 Person.prototype.calcAge = function(){
@@ -55,6 +58,9 @@ console.log(jonas.__proto__.__proto__.__proto__);
 
 console.dir(Person.prototype.constructor);
 
+*/
+
+/*
 const arr = [3,6,4,5,6,9,3];
 console.log(arr.__proto__);
 console.log(arr.__proto__ === Array.prototype);
@@ -69,37 +75,18 @@ console.log(arr.unique());
 
 const h1 = document.querySelector('h1');
  
-const car = function(make, speed){
-    this.currentSpeed = speed;
-    this.make = make;
 
-    this.accelerate = function(){
-        this.currentSpeed+= 10;
-        console.log(`${this.make} going at ${this.currentSpeed} Km/h`);
-    };
-
-    this.brake = function(){
-        this.currentSpeed-= 5;
-        console.log(`${this.make} going at ${this.currentSpeed} Km/h`);
-    };
-
-};
-
-
-const one = new car('BMW', 110);
-const two = new car('Mercedez', 95);
-
-one.accelerate();
-two.accelerate();
 */
 
 //Class declaration
 // const PersonCl = class{};
 
 //Class declaration
+
+/*
 class PersonCl {
-    constructor(firstName, birthYear){
-        this.firstName = firstName;
+    constructor(fullName, birthYear){
+        this.fullName = fullName;
         this.birthYear = birthYear;
     }
 
@@ -107,11 +94,39 @@ class PersonCl {
     calcAge(){
         console.log(2037 - this.birthYear);
     }
+
+    greet(){
+        console.log(`Hey ${this.firstName}`);
+    }
+
+    get age (){
+        return 2037 - this.birthYear;
+    }
+
+    //SET A PROPERTY THAT ALREADY EXISTS
+    set fullName(name){
+        console.log(name); 
+        if (name.includes(' ')) this._fullName = name;
+        else alert(`${name} is not a full name.`)
+    }
+
+    get fullName(){
+        return this._fullName;
+    }
+
+    static hey(){
+        console.log('Hey there');
+        console.log(this.firstName);
+    };
 };
 
-const jessica = new PersonCl('jessica', 1996);
+const jessica = new PersonCl('jessica Davis', 1996);
 console.log(jessica);
 jessica.calcAge();
+console.log(jessica.age);
+console.log(jessica.fullName);
+
+
 
 console.log(jessica.__proto__ === PersonCl.prototype);
 
@@ -120,6 +135,10 @@ PersonCl.prototype.greet = function(){
     console.log(`Hey ${this.firstName}`);
 };
 jessica.greet();
+
+PersonCl.hey();
+
+const walter = new PersonCl('Walter White', 1965);
 
 //1.Classes are NOT hoisted
 //2. Classes are also First-class citizen, they can be used anywhere
@@ -142,3 +161,70 @@ console.log(account.latest);
 
 account.latest = 50;
 console.log(account.movements);
+
+const PersonProto = {
+    calcAge() {
+        console.log(2037 - this.birthYear);
+    },
+
+    init(firstName, birthYear){
+        this.firstName = firstName;
+        this.birthYear = birthYear;
+    }
+}
+
+const steven = Object.create(PersonProto);
+console.log(steven);
+steven.name = 'Steven';
+steven.birthYear = 2002;
+steven.calcAge();
+
+const sarah = Object.create(PersonProto);
+sarah.init('Sarah', 1979);
+sarah.calcAge();
+
+
+class CarCl {
+    constructor(make, speed) {
+      this.make = make;
+      this.speed = speed;
+    }
+  
+    accelerate() {
+      this.speed += 10;
+      console.log(`${this.make} is going at ${this.speed} km/h`);
+    }
+  
+    brake() {
+      this.speed -= 5;
+      console.log(`${this.make} is going at ${this.speed} km/h`);
+    }
+  
+    get speedUS() {
+      return this.speed / 1.6;
+    }
+  
+    set speedUS(speed) {
+      this.speed = speed * 1.6;
+    }
+}
+  
+const ford = new CarCl('Ford', 120);
+console.log(ford.speedUS);
+ford.accelerate();
+ford.accelerate();
+ford.brake();
+ford.speedUS = 50;
+console.log(ford);
+
+
+*/
+
+const Person = function (firstName, birthYear){
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+};
+
+Person.prototype.calcAge = function() {
+    console.log(2037 - this.birthYear);
+}
