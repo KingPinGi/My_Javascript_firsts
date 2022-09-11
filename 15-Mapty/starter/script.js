@@ -78,6 +78,7 @@ class App {
         this._getPosition();
         form.addEventListener('submit', __newWorkOut.bind(this));
         inputType.addEventListener('change', this.__toggleElevationField);
+        containerWorkouts.addEventListener('click', this._moveToPopup())
         
     }
 
@@ -254,6 +255,11 @@ class App {
         //Injecting the html code at the end
         form.insertAdjacentHTML('afterend', html);
         }
+    }
+
+    _moveToPopup(e){
+        e.preventDefault();
+        
     }
 }
 
