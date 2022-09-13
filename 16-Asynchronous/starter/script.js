@@ -114,12 +114,19 @@ setTimeout(() => {
 // console.log(request);
 
 const getCountryData = function(country){
+    //country 1
     fetch(`https://restcountries.com/v3.1/name/${country}`)
     .then(response => response.json())
     .then(data => {
         renderCountry(data[0]);
         console.log(data[0]);
-    }
-        );
+        console.log(data[0].borders[0]);
+        const neighbour = data[0].borders[0];
+
+        if(!neighbour) return;
+
+        //country 2
+        fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
+    });
 };
 getCountryData('usa');
