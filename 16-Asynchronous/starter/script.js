@@ -278,8 +278,20 @@ const lotteryPromise = new Promise(function(resolve, reject){
         resolve('YOU WIN')
     }else{
         reject(new Error('You have lost your money'));
-    }
+    } 
     }, 2000);
 });
 
 lotteryPromise.then(res => console.log(res)).catch(err => console.log(err));
+
+// Promisifying setTime
+const wait = function(seconds){
+    return new Promise(function(resolve){
+        setTimeout(resolve, seconds * 1000);
+    });
+};
+
+wait(2).then(() => {
+    console.log('I waited for 2 weeeks');
+    
+})
