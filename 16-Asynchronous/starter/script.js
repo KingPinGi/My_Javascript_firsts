@@ -291,7 +291,20 @@ const wait = function(seconds){
     });
 };
 
-wait(2).then(() => {
-    console.log('I waited for 2 weeeks');
-    
+wait(1)
+.then(() => {
+    console.log('I waited for 1 seconds');
+    return wait(1);
 })
+.then(() => {
+    console.log('I waited for 2 seconds');
+    return wait(1)
+})
+.then(() => {
+    console.log('3 seconds passsed');
+    return wait(1)
+})
+.then(() => console.log('I waited for 4 second'))
+
+Promise.resolve('abc').then(x => console.log(x));
+Promise.reject(new Error('Problem')).catch(x => console.error(x));
