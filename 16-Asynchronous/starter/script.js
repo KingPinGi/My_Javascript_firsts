@@ -116,7 +116,7 @@ setTimeout(() => {
 
 // const request = fetch(`https://restcountries.com/v3.1/name/portugal`);
 // console.log(request);
-/*
+
 const getJSON = function(url, errorMsg = 'Something went wrong'){
     return fetch(url).then(response => { 
         if(!response.ok){
@@ -125,7 +125,7 @@ const getJSON = function(url, errorMsg = 'Something went wrong'){
     return response.json();
 });
 }
-*/
+
 
 // const getCountryData = function(country){
 //     //country 1
@@ -452,7 +452,7 @@ createImage('img/img-1').then(img => {
     currentImg.style.display = 'none'
 })
 .catch(err => console.error(err));
-*/
+
 
 const getPosition = function(){
     return new Promise(function(resolve, reject){
@@ -482,10 +482,50 @@ const whereAmI = async function(country) {
     }catch(err){
         console.error(err);
         renderError(`Something went wrong ${err.message}`)
-    }
+    };
 };
-whereAmI();
-whereAmI();
-whereAmI();
+// whereAmI().then(city => console.log(`2: ${city}`))
+// .catch(err => console.error(`2: ${err.message}`))
+// .finally(() => console.log(`3: fINISHED GETTING LOCATION`));
+
+(asnc function(){
+    try{
+        const city = await whereAmI();
+        console.log(`2: ${city}`);
+    }catch(err){
+        console.log(`2: ${err.message}`);
+    }
+    console.log('3: Finished getting location');
+});
 
 console.log('FIRST');
+
+
+*/
+
+const get3Countries = async function(c1, c2, c3){
+    try{
+        // const [data1] = await getJSON(
+        //     `https://restcountries.com/v3.1/name/${c1}`
+        // );
+        // const [data2] = await getJSON(
+        //     `https://restcountries.com/v3.1/name/${c2}`
+        // );
+        // const [data3] = await getJSON(
+        //     `https://restcountries.com/v3.1/name/${c3}`
+        // );
+        // console.log([data1.capital[0], data2.capital[0], data3.capital[0]]);
+
+    const data = await Promise.all([
+            getJSON(`https://restcountries.com/v3.1/name/${c1}`),
+            getJSON(`https://restcountries.com/v3.1/name/${c2}`,
+            getJSON(`https://restcountries.com/v3.1/name/${c3}`,
+        ]);
+
+        
+      
+    }catch(err){
+        console.log(err);
+    }
+}
+get3Countries('portugal', 'canada', 'usa');
