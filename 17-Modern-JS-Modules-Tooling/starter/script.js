@@ -89,4 +89,21 @@ if(module.hot){
     module.hot.accept()
 };
 
+class Person{
+    greeting = 'Hey'
+    constructor(name){
+        this.name = name;
+        console.log(`${this.greeting}, ${this.name}`);
+    }
+}
+const jonas = new Person('JONAS');
+console.log('Jonas' ?? null);
 
+Promise.resolve('TEST').then(x => console.log(x));
+
+import 'core-js/stable';
+// import 'core-js/stable/array/find';
+// import 'core-js/stable/promise';
+
+//Polyfilling async functions  
+import 'regenerator-runtime/runtime';
