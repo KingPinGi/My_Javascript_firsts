@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "recipes",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "parcel index.html",
     "build": "parcel build index.html"
@@ -15,6 +16,8 @@
     "parcel": "^2.0.0-rc.0"
   },
   "dependencies": {
+    "core-js": "^3.25.2",
+    "regenerator-runtime": "^0.13.9",
     "sass": "^1.54.9"
   }
 }
