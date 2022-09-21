@@ -3,7 +3,7 @@ import View from './View.js';
 
 class ResultsView extends View {
     _parentElement = document.querySelector('.results');
-    _errorMessage = 'No recipe found for tour query, Please try again!';
+    _errorMessage = 'No recipe found for your query, Please try again!';
     _message = '';
 
 

@@ -8,7 +8,8 @@ export const state = {
     search: {
         query: '',
         result: [],
-        resultPerPage: RES_PER_PAGE
+        resultPerPage: RES_PER_PAGE,
+        page: 1,
     }
 };
 
@@ -46,6 +47,7 @@ export const loadSearchResults = async function (query) {
         console.log(data);
 
         state.search.result = data.data.recipes.map(rec => {
+
             return {
                 id: rec.id,
                 title: rec.title,
@@ -53,6 +55,7 @@ export const loadSearchResults = async function (query) {
                 image: rec.image_url,
             };
         });
+        console.log(state.search.result);
 
     } catch (err) {
         console.log(`${err}`);
@@ -60,9 +63,13 @@ export const loadSearchResults = async function (query) {
     }
 };
 
-export const getSearchResultsPage = function (page) {
-    const start = (page - 1) * state.resultPerPage; //0;
-    const end = (page * state.resultPerPage);     //9;
+export const getSearchResultsPage = function (page = state.search.page) {
+    state.search.page = page;
+    console.log(state.search.page);
+
+    const start = (page - 1) * state.search.resultPerPage; //0;
+    const end = (page * state.search.resultPerPage);     //9;
+    console.log(start, end);
 
     return state.search.result.slice(start, end)
 }
