@@ -40,7 +40,7 @@ const controlSearchResults = async function () {
     resultsView.renderSpinner();
     //1) Get search query
     const query = searchView.getQuery();
-    console.log(query);
+    // console.log(query);
     if (!query) return;
 
     //2) Load search results
@@ -49,7 +49,7 @@ const controlSearchResults = async function () {
     //3. Render Results
     // console.log(model.state.search.result);
     // resultsView.render(model.state.search.result);
-    resultsView.render(model.getSearchResultsPage(4));
+    resultsView.render(model.getSearchResultsPage());
 
     //4. Render inital paginaion
     paginationView.render(model.state.search);
