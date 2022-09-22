@@ -1,25 +1,74 @@
-import icons from 'url:../../img/icons.svg';
 import View from './View.js';
+import icons from 'url:../../img/icons.svg'; // Parcel 2
 
-class PreviewView extends View {
-    _parentElement = '';
+class PaginationView extends View {
+    _parentElement = document.querySelector('.pagination');
 
-    _generateMarkup(result) {
-        const id = window.location.hash.slice(1);
-        return `
-        <li class="preview">
-            <a class="preview__link ${this._data.id === id ? 'preview__link--active' : ''} " href="#${result.id}">
-              <figure class="preview__fig">
-                <img src="${result.image}" alt="Test" />
-              </figure>
-              <div class="preview__data">
-                <h4 class="preview__title">${result.title}/h4>
-                <p class="preview__publisher">${result.publisher}</p>
-              </div>
-            </a>
-        </li>
-        `;
+    addHandlerClick(handler) {
+        this._parentElement.addEventListener('click', function (e) {
+            const btn = e.target.closest('.btn--inline');
+            if (!btn) return;
+
+            const goToPage = +btn.dataset.goto;
+            handler(goToPage);
+        });
+    }
+
+    _generateMarkup() {
+        const curPage = this._data.page;
+        const numPages = Math.ceil(
+            this._data.results.length / this._data.resultsPerPage
+        );
+
+        // Page 1, and there are other pages
+        if (curPage === 1 && numPages > 1) {
+            return `
+        <button data-goto="${curPage + 1
+                }" class="btn--inline pagination__btn--next">
+          <span>Page ${curPage + 1}</span>
+          <svg class="search__icon">
+            <use href="${icons}#icon-arrow-right"></use>
+          </svg>
+        </button>
+      `;
+        }
+
+        // Last page
+        if (curPage === numPages && numPages > 1) {
+            return `
+        <button data-goto="${curPage - 1
+                }" class="btn--inline pagination__btn--prev">
+          <svg class="search__icon">
+            <use href="${icons}#icon-arrow-left"></use>
+          </svg>
+          <span>Page ${curPage - 1}</span>
+        </button>
+      `;
+        }
+
+        // Other page
+        if (curPage < numPages) {
+            return `
+        <button data-goto="${curPage - 1
+                }" class="btn--inline pagination__btn--prev">
+          <svg class="search__icon">
+            <use href="${icons}#icon-arrow-left"></use>
+          </svg>
+          <span>Page ${curPage - 1}</span>
+        </button>
+        <button data-goto="${curPage + 1
+                }" class="btn--inline pagination__btn--next">
+          <span>Page ${curPage + 1}</span>
+          <svg class="search__icon">
+            <use href="${icons}#icon-arrow-right"></use>
+          </svg>
+        </button>
+      `;
+        }
+
+        // Page 1, and there are NO other pages
+        return '';
     }
 }
 
-export default new PreviewView();
+export default new PaginationView();
