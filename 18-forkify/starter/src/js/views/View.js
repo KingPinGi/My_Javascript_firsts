@@ -10,6 +10,8 @@ export default class View {
     this._data = data;
     const markup = this._generateMarkup();
 
+    if (!render) return markup;
+
     this._clear();
     this._parentElement.insertAdjacentHTML('afterbegin', markup);
   };
@@ -19,6 +21,7 @@ export default class View {
     const newMarkup = this._generateMarkup();
 
     const newDOM = document.createRange().createContextualFragment(newMarkup);
+    console.log(newDOM);
     const newElements = Array.from(newDOM.querySelectorAll('*'));
     const curElements = Array.from(this._parrentElement.querySelectorAll('*'));
     console.log(newElements);
